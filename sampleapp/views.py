@@ -5,7 +5,10 @@ import os
 from flask import Flask, flash, request, redirect, url_for, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = '../data/input'
+from scripts.delete_letter import delete_letter
+
+UPLOAD_FOLDER = './data/input'
+
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 myapp.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -40,6 +43,42 @@ def upload():
     return render_template(
         'upload.html'
     )
+
+@myapp.route('/letter_deleter')
+def letter_deleter():
+    '''
+    Replaces all letters in a text file in the data/input folder
+    '''
+
+    # make sure there's an uploaded file
+    upload_folder_path = './data/input'
+    all_files = os.listdir(upload_folder_path)
+    if not all_files:
+        return 'No files uploaded'
+
+    # get first file in upload folder
+    target_file = all_files[0]
+    full_file_path = os.path.join(upload_folder_path, target_file)
+
+    # make sure target file is a text file
+    if target_file[-4:] != '.txt':
+        return 'Invalid file'
+
+    new_text = ''
+
+    # run the letter replacer
+    with open(full_file_path, 'rb') as infile:
+        old_text = infile.read()
+        new_text = delete_letter(old_text, 'a')
+
+    # save the output
+    download_folder_path = './data/output'
+    full_download_path = os.path.join(download_folder_path, target_file)
+    with open(full_download_path, 'wb') as outfile:
+        outfile.write(new_text)
+
+    return redirect(url_for('uploaded_file', filename=target_file))
+
 
 @myapp.route('/uploads/<filename>')
 def uploaded_file(filename):
