@@ -5,7 +5,7 @@ import os
 from flask import Flask, flash, request, redirect, url_for, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 
-from scripts.delete_letter import delete_letter
+from sampleapp.scripts.delete_letter import delete_letter
 
 UPLOAD_FOLDER = './data/input'
 
@@ -77,12 +77,17 @@ def letter_deleter():
     with open(full_download_path, 'wb') as outfile:
         outfile.write(new_text)
 
-    return redirect(url_for('uploaded_file', filename=target_file))
+    return redirect(url_for('output_file', filename=target_file))
 
 
 @myapp.route('/uploads/<filename>')
 def uploaded_file(filename):
     folder_path = '../data/input'
+    return send_from_directory(folder_path, filename)
+
+@myapp.route('/outputs/<filename>')
+def output_file(filename):
+    folder_path = '../data/output'
     return send_from_directory(folder_path, filename)
 
 @myapp.route('/download', methods=['GET'])
