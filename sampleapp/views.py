@@ -82,9 +82,8 @@ def letter_deleter():
 
 @myapp.route('/uploads/<filename>')
 def uploaded_file(filename):
-    print(myapp.config['UPLOAD_FOLDER'], 'aaa')
-    return send_from_directory(myapp.config['UPLOAD_FOLDER'],
-                               filename)
+    folder_path = '../data/input'
+    return send_from_directory(folder_path, filename)
 
 @myapp.route('/download', methods=['GET'])
 def download():
