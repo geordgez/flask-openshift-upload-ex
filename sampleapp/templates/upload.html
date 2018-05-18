@@ -7,5 +7,9 @@ Upload
 {% block content %}
 <div>
   <h3>Upload file</h3>
+  <form method=post enctype=multipart/form-data>
+    <input type=file name=file>
+    <input type=submit value=Upload>
+  </form>
 </div>
 {% endblock %}
