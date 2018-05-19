@@ -62,7 +62,7 @@ def letter_deleter():
 
     # make sure target file is a text file
     if target_file[-4:] != '.txt':
-        return 'Invalid file'
+        return ('Invalid file: ' + target_file)
 
     new_text = ''
 
